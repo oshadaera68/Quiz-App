@@ -1,0 +1,134 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #6b73ff, #000dff);
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.dark-mode {
+    background: #121212;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.dark-mode .card {
+    background: #1e1e1e;
+    color: #fff;
+}
+
+/* Progress Ring Styles */
+.progress-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+}
+
+.progress-ring__svg {
+    transform: rotate(-90deg);
+}
+
+.progress-ring__circle {
+    stroke-dasharray: 339.292;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.progress-ring__text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #6b73ff;
+}
+
+/* Button styles */
+button {
+    background: #6b73ff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5a62d8;
+}
+
+/* Choice container */
+.choice-container {
+    display: flex;
+    align-items: center;
+    background: #f1f1f1;
+    border-radius: 8px;
+    margin: 10px 0;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.choice-container:hover {
+    background: #e0e0e0;
+}
+
+.choice-prefix {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.choice-text {
+    flex: 1;
+}
+
+/* Correct & incorrect feedback */
+.choice-container.correct {
+    background: #c8e6c9;
+}
+
+.choice-container.incorrect {
+    background: #ffcdd2;
+}
+
+/* Fade in & out animations */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+    opacity: 1;
+    animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
