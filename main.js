@@ -1,91 +1,107 @@
-import QuestionArray from './QuestionArray.js';
+const QuestionArray = [{
+    question: "What does HTML stand for?",
+    answer1: "Hyper Text Markup Language",
+    answer2: "Home Tool Markup Language",
+    answer3: "Hyper Text Makeup Language",
+    answer4: "Hyper Typed Markup Language",
+    correctAnswer: "Hyper Text Markup Language"
+}, {
+    question: "What does CSS stand for?",
+    answer1: "Cascading Style Sheets",
+    answer2: "Computer Style Sheets",
+    answer3: "Colorful Style Sheets",
+    answer4: "Creative Style Sheets",
+    correctAnswer: "Cascading Style Sheets"
+}, {
+    question: "What does JS stand for?",
+    answer1: "JavaScript",
+    answer2: "Java Source",
+    answer3: "Java Style",
+    answer4: "Java Script",
+    correctAnswer: "JavaScript"
+}, {
+    question: "What does SQL stand for?",
+    answer1: "Structured Query Language",
+    answer2: "Scripted Query Language",
+    answer3: "Structured Question Language",
+    answer4: "Scripted Question Language",
+    correctAnswer: "Structured Query Language"
+}, {
+    question: "What does PHP stand for?",
+    answer1: "Hypertext Preprocessor",
+    answer2: "Hypertext Programming",
+    answer3: "Hypertext Preprocessor",
+    answer4: "Hypertext Preprogram",
+    correctAnswer: "Hypertext Preprocessor"
+}, {
+    question: "What does ASP stand for?",
+    answer1: "Active Server Pages",
+    answer2: "Application Server Pages",
+    answer3: "Advanced Server Pages",
+    answer4: "Advanced Server Preprocessor",
+    correctAnswer: "Active Server Pages"
+}, {
+    question: "What is not a programming language?",
+    answer1: "HTML",
+    answer2: "CSS",
+    answer3: "JS",
+    answer4: "PHP",
+    correctAnswer: "HTML"
+}, {
+    question: "What is the most popular Linux OS?",
+    answer1: "Ubuntu",
+    answer2: "Kali",
+    answer3: "Fedora",
+    answer4: "CentOS",
+    correctAnswer: "Ubuntu"
+}, {
+    question: "Which is not a movie in Sailesh Kolanu’s HITVerse?",
+    answer1: "RRR",
+    answer2: "HIT: The First Case",
+    answer3: "HIT: The Second Case",
+    answer4: "HIT: The Third Case",
+    correctAnswer: "RRR"
+}, {
+    question: "What is Tovino Thomas’s first 100cr movie?",
+    answer1: "ARM",
+    answer2: "Anweshippin Kandethum",
+    answer3: "Lucifer 2: Empuraan",
+    answer4: "Maari 2",
+    correctAnswer: "ARM"
+}];
 
 const startBtn = document.getElementById('start-btn');
+const restartBtn = document.getElementById('restart-btn');
 const startPage = document.getElementById('start-page');
 const quizPage = document.getElementById('quiz-page');
 const endPage = document.getElementById('end-page');
-const restartBtn = document.getElementById('restart-btn');
-const darkModeToggle = document.getElementById('darkModeToggle');
 
 const questionElement = document.getElementById('question');
 const choices = Array.from(document.getElementsByClassName('choice-text'));
 const progressText = document.getElementById('progressText');
+const progressBarFull = document.getElementById('progressBarFull');
 const scoreText = document.getElementById('score');
-const timerText = document.getElementById('time-left-text');
-const nextBtn = document.getElementById('next-btn');
 const finalScore = document.getElementById('final-score');
-const highScoreText = document.getElementById('high-score');
-const totalTimeText = document.getElementById('total-time');
-const globalTimerEl = document.getElementById('global-timer');
-
-const circle = document.querySelector('.progress-ring__circle');
-const radius = circle.r.baseVal.value;
-const circumference = 2 * Math.PI * radius;
-
-circle.style.strokeDasharray = `${circumference} ${circumference}`;
-circle.style.strokeDashoffset = 0;
+const timerDisplay = document.getElementById('time');
 
 let currentQuestionIndex = 0;
 let score = 0;
-let timer;
-let timeLeft = 30;
-let acceptingAnswers = false;
-let answered = false;
+let timerInterval;
+let timeLeft = 15;
 
-let globalTime = 0;
-let globalTimer;
-
-startBtn.addEventListener('click', () => {
-    transition(startPage, quizPage);
-    startQuiz();
-});
-
-restartBtn.addEventListener('click', () => {
-    transition(endPage, startPage);
-});
-
-darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-});
-
-function transition(fromPage, toPage) {
-    fromPage.classList.add('fade-out');
-    fromPage.addEventListener('animationend', () => {
-        fromPage.classList.add('hidden');
-        fromPage.classList.remove('fade-out');
-
-        toPage.classList.remove('hidden');
-        toPage.classList.add('fade-in');
-
-        toPage.addEventListener('animationend', () => {
-            toPage.classList.remove('fade-in');
-        }, { once: true });
-    }, { once: true });
-}
+startBtn.addEventListener('click', startQuiz);
+restartBtn.addEventListener('click', restartQuiz);
 
 function startQuiz() {
+    startPage.classList.add('hidden');
+    quizPage.classList.remove('hidden');
     currentQuestionIndex = 0;
     score = 0;
-    globalTime = 0;
-    startGlobalTimer();
     showQuestion();
-}
-
-function startGlobalTimer() {
-    globalTimer = setInterval(() => {
-        globalTime++;
-        updateGlobalTimer();
-    }, 1000);
-}
-
-function updateGlobalTimer() {
-    const minutes = Math.floor(globalTime / 60);
-    const seconds = globalTime % 60;
-    globalTimerEl.innerText = `Total Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    updateHUD();
 }
 
 function showQuestion() {
-    resetState();
     const currentQuestion = QuestionArray[currentQuestionIndex];
     questionElement.innerText = currentQuestion.question;
 
@@ -94,106 +110,73 @@ function showQuestion() {
     choices[2].innerText = currentQuestion.answer3;
     choices[3].innerText = currentQuestion.answer4;
 
-    progressText.innerText = `Question ${currentQuestionIndex + 1}/${QuestionArray.length}`;
-    scoreText.innerText = `Score: ${score}`;
-
-    acceptingAnswers = true;
-    answered = false;
-    resetTimer();
     startTimer();
 }
 
 choices.forEach(choice => {
     choice.addEventListener('click', e => {
-        if (!acceptingAnswers) return;
-        acceptingAnswers = false;
-        answered = true;
-
+        clearInterval(timerInterval);
         const selectedAnswer = e.target.innerText;
         const currentQuestion = QuestionArray[currentQuestionIndex];
 
-        clearInterval(timer);
-
         if (selectedAnswer === currentQuestion.correctAnswer) {
-            score++;
-            e.target.parentElement.classList.add('correct');
+            score += 10;
+            alert("✅ Correct!");
         } else {
-            e.target.parentElement.classList.add('incorrect');
+            alert(`❌ Wrong! Correct answer: ${currentQuestion.correctAnswer}`);
         }
 
-        scoreText.innerText = `Score: ${score}`;
+        currentQuestionIndex++;
+        if (currentQuestionIndex < QuestionArray.length) {
+            showQuestion();
+            updateHUD();
+        } else {
+            endQuiz();
+        }
     });
-});
-
-nextBtn.addEventListener('click', () => {
-    if (!answered) return;
-
-    currentQuestionIndex++;
-    if (currentQuestionIndex < QuestionArray.length) {
-        showQuestion();
-    } else {
-        showEndPage();
-    }
 });
 
 function startTimer() {
     timeLeft = 30;
-    updateTimer();
-    setProgress(timeLeft);
+    timerDisplay.innerText = timeLeft;
 
-    timer = setInterval(() => {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
         timeLeft--;
-        updateTimer();
-        setProgress(timeLeft);
+        timerDisplay.innerText = timeLeft;
 
         if (timeLeft <= 0) {
-            clearInterval(timer);
-            acceptingAnswers = false;
-            answered = true;
-            autoSelectAnswer();
+            clearInterval(timerInterval);
+            handleTimeUp();
         }
     }, 1000);
 }
 
-function resetTimer() {
-    clearInterval(timer);
-    timeLeft = 30;
-    updateTimer();
-    setProgress(timeLeft);
-}
-
-function updateTimer() {
-    timerText.innerText = timeLeft;
-}
-
-function setProgress(timeLeft) {
-    const percent = timeLeft / 30;
-    const offset = circumference - percent * circumference;
-    circle.style.strokeDashoffset = offset;
-}
-
-function autoSelectAnswer() {
-    choices.forEach(choice => {
-        choice.parentElement.classList.add('incorrect');
-    });
-}
-
-function resetState() {
-    choices.forEach(choice => {
-        choice.parentElement.classList.remove('correct', 'incorrect');
-    });
-}
-
-function showEndPage() {
-    transition(quizPage, endPage);
-    finalScore.innerText = `Your score: ${score} / ${QuestionArray.length}`;
-
-    clearInterval(globalTimer);
-
-    const highScore = localStorage.getItem('highScore') || 0;
-    if (score > highScore) {
-        localStorage.setItem('highScore', score);
+function handleTimeUp() {
+    alert(`⏰ Time's up! Correct answer: ${QuestionArray[currentQuestionIndex].correctAnswer}`);
+    currentQuestionIndex++;
+    if (currentQuestionIndex < QuestionArray.length) {
+        showQuestion();
+        updateHUD();
+    } else {
+        endQuiz();
     }
-    highScoreText.innerText = `High score: ${localStorage.getItem('highScore')}`;
-    totalTimeText.innerText = `Total time: ${Math.floor(globalTime / 60)}:${globalTime % 60 < 10 ? '0' : ''}${globalTime % 60}`;
+}
+
+function updateHUD() {
+    progressText.innerText = `Question ${currentQuestionIndex + 1}/${QuestionArray.length}`;
+    progressBarFull.style.width = `${((currentQuestionIndex + 1) / QuestionArray.length) * 100}%`;
+    scoreText.innerText = `Score: ${score}`;
+}
+
+function endQuiz() {
+    clearInterval(timerInterval);
+    quizPage.classList.add('hidden');
+    endPage.classList.remove('hidden');
+    finalScore.innerText = `Your final score is: ${score}`;
+}
+
+function restartQuiz() {
+    endPage.classList.add('hidden');
+    startPage.classList.remove('hidden');
 }

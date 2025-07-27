@@ -4,67 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Era boy'z Quiz App</title>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="main.css" />
 </head>
 <body>
-
 <div class="container">
     <!-- Start Page -->
     <div id="start-page" class="flex-center">
-        <div class="card">
-            <div class="start-header">
-                <h1><span class="brain">🧠</span> Knowledge Quiz</h1>
-            </div>
-            <p class="start-description">
-                Test your knowledge with this interactive quiz!<br>
-                Answer questions and see how well you score.
-            </p>
-            <button id="start-btn" class="start-btn">START QUIZ</button>
-        </div>
+        <h1>Welcome to Era boy'z Quiz App</h1>
+        <button id="start-btn">Start Quiz</button>
     </div>
 
     <!-- Quiz Page -->
     <div id="quiz-page" class="hidden">
-        <div class="card">
-            <div id="hud">
-                <p id="progressText">Question 1/12</p>
-                <p id="global-timer">Total Time: 0:00</p>
-                <p id="score">Score: 0</p>
-                <button id="darkModeToggle">🌙 Dark</button>
+        <div id="hud">
+            <p id="progressText">Question 1/10</p>
+            <div id="progressBar">
+                <div id="progressBarFull"></div>
             </div>
+            <p id="score">Score: 0</p>
+            <p id="timer">Time Left: <span id="time">30</span>s</p>
+        </div>
 
-            <!-- Progress Ring -->
-            <div class="progress-ring">
-                <svg class="progress-ring__svg" width="120" height="120">
-                    <circle class="progress-ring__circle" stroke="#6b73ff" stroke-width="8" fill="transparent" r="54" cx="60" cy="60"/>
-                </svg>
-                <div class="progress-ring__text" id="time-left-text">30</div>
+        <h1 id="question">Question text</h1>
+        <div id="choices">
+            <div class="choice-container">
+                <div class="choice-prefix">A</div>
+                <div class="choice-text" data-number="1"></div>
             </div>
-
-            <h1 id="question">Question text</h1>
-            <div id="choices">
-                <div class="choice-container"><p class="choice-prefix">A</p><p class="choice-text" data-number="1"></p></div>
-                <div class="choice-container"><p class="choice-prefix">B</p><p class="choice-text" data-number="2"></p></div>
-                <div class="choice-container"><p class="choice-prefix">C</p><p class="choice-text" data-number="3"></p></div>
-                <div class="choice-container"><p class="choice-prefix">D</p><p class="choice-text" data-number="4"></p></div>
+            <div class="choice-container">
+                <div class="choice-prefix">B</div>
+                <div class="choice-text" data-number="2"></div>
             </div>
-
-            <button id="next-btn" class="next-btn">Next Question</button>
+            <div class="choice-container">
+                <div class="choice-prefix">C</div>
+                <div class="choice-text" data-number="3"></div>
+            </div>
+            <div class="choice-container">
+                <div class="choice-prefix">D</div>
+                <div class="choice-text" data-number="4"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Results Page -->
+    <!-- End Page -->
     <div id="end-page" class="hidden flex-center">
-        <div class="card">
-            <h1>Quiz Finished!</h1>
-            <p id="final-score"></p>
-            <p id="high-score"></p>
-            <p id="total-time"></p>
-            <button id="restart-btn">Restart Quiz</button>
-        </div>
+        <h1>Quiz Finished!</h1>
+        <p id="final-score"></p>
+        <button id="restart-btn">Restart Quiz</button>
     </div>
 </div>
 

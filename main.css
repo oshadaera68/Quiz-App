@@ -1,134 +1,149 @@
-body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #6b73ff, #000dff);
-    color: #333;
-    margin: 0;
-    padding: 0;
+* {
+    box-sizing: border-box;
 }
 
-.dark-mode {
-    background: #121212;
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to right, #141e30, #243b55);
     color: #fff;
 }
 
 .container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.flex-center {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    padding: 20px;
+    justify-content: center;
+    text-align: center;
 }
 
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
-    max-width: 500px;
-    width: 100%;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
 
-.dark-mode .card {
-    background: #1e1e1e;
-    color: #fff;
-}
-
-/* Progress Ring Styles */
-.progress-ring {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 20px auto;
-}
-
-.progress-ring__svg {
-    transform: rotate(-90deg);
-}
-
-.progress-ring__circle {
-    stroke-dasharray: 339.292;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1s linear;
-}
-
-.progress-ring__text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    font-weight: bold;
-    color: #6b73ff;
-}
-
-/* Button styles */
 button {
-    background: #6b73ff;
+    padding: 12px 32px;
+    font-size: 1rem;
+    background: #00c9a7;
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    margin-top: 20px;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 30px;
     cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-    background: #5a62d8;
+    background: #00b39c;
+    transform: scale(1.05);
 }
 
-/* Choice container */
 .choice-container {
     display: flex;
     align-items: center;
-    background: #f1f1f1;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 14px 20px;
     margin: 10px 0;
+    border-radius: 12px;
     cursor: pointer;
-    padding: 10px;
+    transition: background 0.3s ease;
 }
 
 .choice-container:hover {
-    background: #e0e0e0;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .choice-prefix {
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 16px;
+    background: #00c9a7;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .choice-text {
     flex: 1;
+    text-align: left;
+    font-size: 1rem;
 }
 
-/* Correct & incorrect feedback */
-.choice-container.correct {
-    background: #c8e6c9;
+#hud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
 }
 
-.choice-container.incorrect {
-    background: #ffcdd2;
+#progressText,
+#score,
+#timer {
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-/* Fade in & out animations */
-.fade-in {
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
+#progressBar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    height: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0 10px;
 }
 
-.fade-out {
-    opacity: 1;
-    animation: fadeOut 0.5s forwards;
+#progressBarFull {
+    background: #00c9a7;
+    height: 100%;
+    width: 0;
+    transition: width 0.5s ease-in-out;
+}
+
+#timer {
+    color: #ffc107;
+    animation: pulse 1.5s infinite;
+}
+
+.hidden {
+    display: none;
 }
 
 @keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
     to {
         opacity: 1;
+        transform: translateY(0);
     }
 }
 
-@keyframes fadeOut {
-    to {
-        opacity: 0;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
     }
 }
