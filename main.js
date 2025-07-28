@@ -83,14 +83,28 @@ const progressBarFull = document.getElementById('progressBarFull');
 const scoreText = document.getElementById('score');
 const finalScore = document.getElementById('final-score');
 const timerDisplay = document.getElementById('time');
+const nextBtn = document.getElementById('next-btn');
+
 
 let currentQuestionIndex = 0;
 let score = 0;
 let timerInterval;
 let timeLeft = 15;
+let questionAnswered = false;
 
 startBtn.addEventListener('click', startQuiz);
 restartBtn.addEventListener('click', restartQuiz);
+nextBtn.addEventListener('click', nextQuestion);
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < QuestionArray.length) {
+        showQuestion();
+        updateHUD();
+    } else {
+        endQuiz();
+    }
+}
 
 function startQuiz() {
     startPage.classList.add('hidden');
@@ -111,11 +125,16 @@ function showQuestion() {
     choices[3].innerText = currentQuestion.answer4;
 
     startTimer();
+    questionAnswered = false;
+    nextBtn.classList.add('hidden');
 }
+
 
 choices.forEach(choice => {
     choice.addEventListener('click', e => {
+        if (questionAnswered) return; // Prevent multiple clicks
         clearInterval(timerInterval);
+
         const selectedAnswer = e.target.innerText;
         const currentQuestion = QuestionArray[currentQuestionIndex];
 
@@ -126,13 +145,8 @@ choices.forEach(choice => {
             alert(`❌ Wrong! Correct answer: ${currentQuestion.correctAnswer}`);
         }
 
-        currentQuestionIndex++;
-        if (currentQuestionIndex < QuestionArray.length) {
-            showQuestion();
-            updateHUD();
-        } else {
-            endQuiz();
-        }
+        questionAnswered = true;
+        nextBtn.classList.remove('hidden');
     });
 });
 
@@ -161,6 +175,8 @@ function handleTimeUp() {
     } else {
         endQuiz();
     }
+    questionAnswered = true;
+    nextBtn.classList.remove('hidden');
 }
 
 function updateHUD() {
@@ -174,6 +190,22 @@ function endQuiz() {
     quizPage.classList.add('hidden');
     endPage.classList.remove('hidden');
     finalScore.innerText = `Your final score is: ${score}`;
+
+    // Feedback logic
+    const feedbackEl = document.getElementById('feedback');
+    let feedback = "";
+
+    if (score === QuestionArray.length * 10) {
+        feedback = "🎉 Excellent! You got a perfect score!";
+    } else if (score >= (QuestionArray.length * 10 * 0.7)) {
+        feedback = "👏 Great job! You did really well.";
+    } else if (score >= (QuestionArray.length * 10 * 0.4)) {
+        feedback = "👍 Not bad! A bit more practice and you'll ace it.";
+    } else {
+        feedback = "💡 Keep trying! Review the questions and try again.";
+    }
+
+    feedbackEl.innerText = feedback;
 }
 
 function restartQuiz() {

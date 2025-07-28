@@ -125,6 +125,16 @@ button:hover {
     display: none;
 }
 
+#next-btn {
+    margin-top: 20px;
+}
+
+#feedback {
+    font-size: 18px;
+    margin-top: 20px;
+    color: white;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
